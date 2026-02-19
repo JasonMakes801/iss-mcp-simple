@@ -1,5 +1,5 @@
 from mcp.server.fastmcp import FastMCP
-import urllib.request
+import httpx
 import json
 
 mcp = FastMCP("iss-tracker")
@@ -8,10 +8,8 @@ mcp = FastMCP("iss-tracker")
 @mcp.tool()
 def where_is_iss() -> str:
     """Get the current position of the International Space Station"""
-    with urllib.request.urlopen(
-        "https://api.wheretheiss.at/v1/satellites/25544"
-    ) as response:
-        iss = json.loads(response.read())
+    response = httpx.get("https://api.wheretheiss.at/v1/satellites/25544")
+    iss = response.json()
 
     return json.dumps(
         {
