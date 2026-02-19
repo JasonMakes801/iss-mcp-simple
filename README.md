@@ -4,47 +4,41 @@ A minimal MCP server with one tool: ask where the International Space Station is
 
 No API keys needed. The ISS tracking API is free and open.
 
-## Setup
+## The Easy Way (Claude Code)
+
+If you have [Claude Code](https://docs.anthropic.com/en/docs/claude-code), just tell it:
+
+> Clone the repo at github.com/JasonMakes801/iss-mcp-simple. Set up a Python virtual environment, install the dependencies, and configure it as an MCP server in Claude Desktop. Test that it works.
+
+Claude Code will handle everything.
+
+## Manual Setup
 
 ```bash
 git clone https://github.com/JasonMakes801/iss-mcp-simple.git
 cd iss-mcp-simple
-npm install
-npm run build
+python3 -m venv .venv
+source .venv/bin/activate    # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-## Connect to Claude Desktop
-
-Open your Claude Desktop config file:
-
-- **Mac:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
-
-Add this to the `mcpServers` section (replace the path with your actual path):
+Add to Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json` on Mac):
 
 ```json
 {
   "mcpServers": {
     "iss-tracker": {
-      "command": "node",
-      "args": ["/full/path/to/iss-mcp-simple/dist/index.js"]
+      "command": "/full/path/to/iss-mcp-simple/.venv/bin/python",
+      "args": ["/full/path/to/iss-mcp-simple/server.py"]
     }
   }
 }
 ```
 
-Restart Claude Desktop.
+Restart Claude Desktop and ask: "Where is the ISS right now?"
 
-## Test it
+## What it does
 
-Open Claude Desktop and ask:
+One tool (`where_is_iss`) calls the [Where The ISS At](https://wheretheiss.at) API and returns live coordinates, altitude, velocity, and visibility. Claude interprets the data and answers in plain English.
 
-> Where is the ISS right now?
-
-You should get back live coordinates, altitude, and velocity — real data from the satellite tracking API, not a memorized answer.
-
-## What this demonstrates
-
-This is an MCP server. It gives your AI a tool it can call to get live data. The AI doesn't know where the ISS is — but it knows it has a tool that does.
-
-One tool, one API, one answer. The pattern scales to any data source.
+Companion repo for [Intentional AI](https://intentionalai.substack.com).
